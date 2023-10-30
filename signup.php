@@ -64,8 +64,8 @@
     </form>
 </div>
 
-<footer class="site-footer">
-    <p>&copy; 2023 SportsPortal</p>
-</footer>
+<?php
+    require_once("./components/footer.php")
+?>
 </body>
 </html>
