@@ -14,20 +14,15 @@ if (isset($_GET['error'])) {
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="form.css">
     <title>Login Form</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body style="font-family: Verdana;">
-<header>
-    <div class="logo">
-        <a href="index.php" style="text-decoration: none; color: inherit;">SportsPortal</a>
-    </div>
-    <nav>
-        <div class="search-container">
-            <input type="text" placeholder="Search" class="search-box">
-            <button type="submit" class="search-button">Search</button>
-        </div>
-    </nav>
-    <div class="profile"><a href="signup.php" style="text-decoration: none;">Sign up</a></div>
-</header>
+    <?php
+    require_once("./components/navbar.php")
+
+?>
+
   
 <div class="container">
 <form action="login_process.php" method="post">
@@ -65,8 +60,8 @@ if (isset($_GET['error'])) {
     </form>
 </div>
 
-<footer class="site-footer">
-    <p>&copy; 2023 SportsPortal</p>
-</footer>
+<?php
+    require_once("./components/footer.php")
+?>
 </body>
 </html>

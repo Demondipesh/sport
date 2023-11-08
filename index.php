@@ -26,135 +26,110 @@ $result_posts = $conn->query($sql_posts);
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
 </head>
+
 <body style="font-family: Verdana; ">
-<header>
-    <div class="logo">
-        <a href="index.php" style="text-decoration: none; color: inherit;">
-        <img src="logo.gif" alt="logo" style="width: 50px; height: 50px;">
 
-        SportsPortal</a>
-    </div>
-    <nav>
-    <form action="search.php" method="GET">
-        <div class="search-container">
-            <input type="text" placeholder="Search" class="search-box" name="search_query">
-            <button type="submit" class="search-button">Search</button>
-        </div>
-    </form>
-</nav>
+    <!-- Navbar -->
+    <?php
+    require_once('./components/navbar.php');
+    ?>
 
-    <div class="profile">
-        <?php if (isset($_SESSION['user_id'])) : ?>
-            <a href="userdashboard.php" style="text-decoration: none;">
-                <?php echo ucfirst(strtolower($_SESSION['user_name'])); ?>
-            </a>
-        <?php else : ?>
-            <a href="<?php echo $loginLink; ?>" style="text-decoration:none">Log In</a>
-            <a href="<?php echo $signUpLink; ?>" style="text-decoration:none">Sign Up</a>
-        <?php endif; ?>
-    </div>
-</header>
-<?php if (!isset($_SESSION['user_id'])) : ?>
-    <div style="background-color:#f1f1f1;padding:15px;">
-        <div class="content">
-            <div class="welcome-section">
-                <div class="welcome-box">
-                    <h1>Welcome to SportsPortal</h1>
-                    <h3>Are you registered?</h3>
-                    <div class="answer-options">
-                        <a href="<?php echo $loginLink; ?>" style="text-decoration: none;" class="yes-option"> if Yes</a>
-                        <a href="<?php echo $signUpLink; ?>" style="text-decoration: none;" class="no-option">if No</a>
+
+    <!-- main area -->
+
+
+    <div class="min-h-screen">
+        <?php if (!isset($_SESSION['user_id'])) : ?>
+            <div class="containers w-full">
+                <div data-am-gallery>
+                    <!-- Radio -->
+                    <input type="radio" name="gallery" id="img-1" checked />
+                    <input type="radio" name="gallery" id="img-2" />
+                    <input type="radio" name="gallery" id="img-3" />
+
+                    <!-- Images -->
+                    <div class="images">
+                        <div class="image" style="background-image: url(https://th.bing.com/th/id/OIP.4C1KmO7co8CLnp46GUd7XgHaEo?pid=ImgDet&rs=1);"></div>
+                        <div class="image" style="background-image: url(https://th.bing.com/th/id/R.dcfaa4e0d05802dad110c34575e506fd?rik=tStvHjZngQPg4Q&pid=ImgRaw&r=0);"></div>
+                        <div class="image" style="background-image: url(https://wallpapercave.com/wp/wp2356048.jpg);"></div>
                     </div>
+
+                    <!-- Navigation -->
+                    <div class="navigation">
+                        <label class="dot" for="img-1"></label>
+                        <label class="dot" for="img-2"></label>
+                        <label class="dot" for="img-3"></label>
+                    </div>
+
                 </div>
             </div>
-        </div>
+
+            <?php
+            require_once('./components/features.php');
+            ?>
+
+        <?php else : ?>
+            <?php include('./components/loggedHome.php'); ?>
+        <?php endif; ?>
     </div>
-<?php endif; ?>
 
-<div style="overflow:auto">
-<div class="menu">
-        <a href="index.php" class="menuitem">Home</a>
-        <a href="userdashboard.php" class="menuitem">Profile</a>
-        <a href="post-upload.php" class="menuitem">Post</a>
-    </div>
-        
-    <div class="main">
-        <?php
-        if ($result_posts->num_rows === 0) {
-            echo '<p>No posts are available currently. Please check back later.</p>';
-        } else {
-            while ($row_posts = $result_posts->fetch_assoc()) {
-                $postId = $row_posts['id'];
-                $postDescription = $row_posts['description'];
-                $postImage = $row_posts['image'];
-                $postCreatedAt = $row_posts['created_at'];
-                $postFoodName = $row_posts['player_name'];
-                $postUploadedByFullName = $row_posts['fullname']; // Fetched full name from query result
-                
-              
-                // Get like count for this post
-                $sql_likes = "SELECT COUNT(*) AS like_count FROM likes WHERE post_id = '$postId'";
-                $result_likes = $conn->query($sql_likes);
-                $like_count = ($result_likes->num_rows > 0) ? $result_likes->fetch_assoc()['like_count'] : 0;
-                
-                // Get comment count for this post
-                $sql_comments = "SELECT COUNT(*) AS comment_count FROM comments WHERE post_id = '$postId'";
-                $result_comments = $conn->query($sql_comments);
-                $comment_count = ($result_comments->num_rows > 0) ? $result_comments->fetch_assoc()['comment_count'] : 0;
-        ?>
-             <div class="post">
-    <img src="postspic/<?php echo $postImage; ?>" alt="Post Image">
-    <p><strong>PlayerName:</strong> <a href="viewpost.php?post_id=<?php echo $postId; ?>"><?php echo $postFoodName; ?></a></p>
-    <p><strong>Posted by:</strong> <?php echo $postUploadedByFullName; ?></p>
-    <p><strong>Description:</strong> <?php echo $postDescription; ?></p>
-    <p><strong>Posted on:</strong> <?php echo $postCreatedAt; ?></p>
-                
-                <!-- Like and Comment section for each post -->
-            <div class="actions-section">
-                <?php if (isset($_SESSION['user_id'])) { ?>
-                    <form action="like-post.php" method="post" class="like-form">
-                        <input type="hidden" name="post_id" value="<?php echo $postId; ?>">
-                        <button type="submit">Like</button>
-                        <span class="like-count"><?php echo $like_count; ?> likes</span>
-                    </form>
-                    <form action="add-comment.php" method="post" class="comment-form" name="commentForm" >
-    <input type="hidden" name="post_id" value="<?php echo $postId; ?>">
-    <textarea name="comment" placeholder="Leave a comment"></textarea>
-    <span id="commentError" style="color: red;"></span> <!-- Display error messages -->
-    <button type="submit">Submit Comment</button>
-</form>
+    <!-- footer -->
+    <?php
+    require_once('./components/footer.php');
+    ?>
 
 
- 
+</body>
 
-                    
-<span class="comment-count"><?php echo $comment_count; ?> comments</span>
-                <?php } else { ?>
-                    <p><a href="login.php">Log in</a> to like and comment on this post.</p>
-                <?php } ?>
-            </div>
-        </div>
-        <?php
+<script>
+    // Burger menus
+    document.addEventListener('DOMContentLoaded', function() {
+        // open
+        const burger = document.querySelectorAll('.navbar-burger');
+        const menu = document.querySelectorAll('.navbar-menu');
+
+        if (burger.length && menu.length) {
+            for (var i = 0; i < burger.length; i++) {
+                burger[i].addEventListener('click', function() {
+                    for (var j = 0; j < menu.length; j++) {
+                        menu[j].classList.toggle('hidden');
+                    }
+                });
             }
         }
-        ?>
-    </div>
-    
-    <div class="right">
-        <h2>Quick Links</h2>
-        <p><a href="#" style="text-decoration: none;">About us</a></p>
-        <p><a href="#" style="text-decoration: none;">Terms & Conditions</a></p>
-        <p><a href="#" style="text-decoration: none;">Privacy Policy</a></p>
-        <p><a href="#" style="text-decoration: none;">Contact us</a></p>
-    </div>
-</div>
 
-<footer class="site-footer">
-    <p>&copy; <?php echo date("Y"); ?> SportsPortal</p>
-</footer>
-</body>
+        // close
+        const close = document.querySelectorAll('.navbar-close');
+        const backdrop = document.querySelectorAll('.navbar-backdrop');
+
+        if (close.length) {
+            for (var i = 0; i < close.length; i++) {
+                close[i].addEventListener('click', function() {
+                    for (var j = 0; j < menu.length; j++) {
+                        menu[j].classList.toggle('hidden');
+                    }
+                });
+            }
+        }
+
+        if (backdrop.length) {
+            for (var i = 0; i < backdrop.length; i++) {
+                backdrop[i].addEventListener('click', function() {
+                    for (var j = 0; j < menu.length; j++) {
+                        menu[j].classList.toggle('hidden');
+                    }
+                });
+            }
+        }
+    });
+</script>
+
+
+
 </html>

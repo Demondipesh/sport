@@ -52,34 +52,18 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css"> 
     <title>Upload a Post</title>
+    <link rel="stylesheet" href="styles.css"> 
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body style="font-family: Verdana; ">
-<header>
-    <div class="logo">
-        <a href="index.php" style="text-decoration: none; color: inherit;">SportsPortal</a>
-    </div>
-    <nav>
-    <form action="search.php" method="GET">
-        <div class="search-container">
-            <input type="text" placeholder="Search" class="search-box" name="search_query">
-            <button type="submit" class="search-button">Search</button>
-        </div>
-    </form>
-</nav>
 
-    <div class="profile">
-        <?php if (isset($_SESSION['user_id'])) : ?>
-            <a href="userdashboard.php" style="text-decoration: none;">
-                <?php echo ucfirst(strtolower($_SESSION['user_name'])); ?>
-            </a>
-        <?php else : ?>
-            <a href="<?php echo $loginLink; ?>" style="text-decoration:none">Log In</a>
-            <a href="<?php echo $signUpLink; ?>" style="text-decoration:none">Sign Up</a>
-        <?php endif; ?>
-    </div>
-</header>
+<body style="font-family: Verdana; ">
+
+    <!-- Navbar -->
+    <?php
+    require_once('./components/navbar.php');
+    ?>
+
 
     <main class="container">
         <section class="content">
@@ -105,8 +89,8 @@ $conn->close();
         </section>
     </main>
 
-    <footer class="site-footer">
-        <p>&copy; <?php echo date("Y"); ?> SportsPortal</p>
-    </footer>
+   <?php
+    require_once('./components/footer.php');
+    ?>
 </body>
 </html>

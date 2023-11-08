@@ -48,28 +48,16 @@ $conn->close();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-   
     <title>User Dashboard</title>
+    
+    
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body style="font-family: Verdana;">
-<header>
-    <div class="logo">
-        <a href="index.php" style="text-decoration: none; color: inherit;">SportsPortal</a>
-    </div>
-    <nav>
-    <form action="search.php" method="GET">
-        <div class="search-container">
-            <input type="text" placeholder="Search" class="search-box" name="search_query">
-            <button type="submit" class="search-button">Search</button>
-        </div>
-    </form>
-</nav>
+    <?php
+    require_once("./components/navbar.php")
 
-
-    <div class="profile">
-        <a href="logout.php" style="text-decoration: none;">Log Out</a>
-    </div>
-</header>
+?>
 
 <main class="container">
     <section class="content">
@@ -80,6 +68,9 @@ $conn->close();
                 <!-- Edit Profile button inside the box's top right corner -->
                 <div class="edit-profile-button">
                     <a href="edit-profile.php" class="edit-button">Edit Profile</a>
+                    <a href="logout.php" class="edit-button">Logout</a>
+
+
                 </div>
             </div>
             <div class="profile-picture">
@@ -126,8 +117,8 @@ $conn->close();
     </div>
 </section>
 
-<footer class="site-footer">
-    <p>&copy; <?php echo date("Y"); ?> SportsPortal</p>
-</footer>
+<?php
+    require_once("./components/footer.php")
+?>
 </body>
 </html>
